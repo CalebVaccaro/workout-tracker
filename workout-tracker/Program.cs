@@ -1,8 +1,11 @@
 ﻿using workout_tracker;
 
 // Configuration
-var apiKey = AppConfig.GetOpenAPIKey();
-var prompt = "Tell me what workout routine I should do based on my workout history for the rest of the week.";
+var apiKey = AppConfig.GetOpenAIAPIKey();
+var prompt = "Tell me what workout routine I should do based on my workout history";
+
+var date = DateTime.Now;
+var dateToPrompt = $"please only include workouts for the rest of the week as of {date:yyyy-MM-dd}";
             
 // Workout Information
 var workoutInfo = new WorkoutInfo();
@@ -14,5 +17,6 @@ var muscleGroupsNotWorkedThisWeek = workoutInfo.GetMuscleGroupsNotWorkedThisWeek
 Console.WriteLine($"Muscle groups not worked this week: {muscleGroupsNotWorkedThisWeek}");
 
 // LLM Response for Workout Routine
-var response = await OpenAIResponse.GetOpenAIResponseAsync(apiKey, prompt + " " + muscleGroupsNotWorkedThisWeek);
+var finalPrompt = $"{prompt}: {muscleGroupsNotWorkedThisWeek}, {dateToPrompt}";
+var response = await OpenAIResponse.GetOpenAIResponseAsync(apiKey, finalPrompt);
 Console.WriteLine(response);

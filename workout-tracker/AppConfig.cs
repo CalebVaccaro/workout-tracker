@@ -4,15 +4,17 @@ namespace workout_tracker;
 
 public static class AppConfig
 {
-    public static string GetOpenAPIKey()
+    private static IConfigurationRoot? GetConfigurationRoot()
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json");
 
         IConfigurationRoot configuration = builder.Build();
-
-        string apiKey = configuration["apiKey"];
-        return apiKey;
+        return configuration;
     }
+    
+    public static string GetOpenAIAPIKey() => GetConfigurationRoot()["apiKey"];
+
+    public static string GetOpenAIUrl() => GetConfigurationRoot()["openai-url"];
 }

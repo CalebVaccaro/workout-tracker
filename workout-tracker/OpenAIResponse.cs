@@ -5,12 +5,12 @@ namespace workout_tracker;
 
 public class OpenAIResponse
 {
-    private static readonly HttpClient client = new HttpClient();
+    private static readonly HttpClient client = new();
+    private static readonly string OpenAIRequestURL = AppConfig.GetOpenAIUrl();
     
     public static async Task<string> GetOpenAIResponseAsync(string apiKey, string prompt)
     {
         // Set up the request
-        var requestUri = "https://api.openai.com/v1/chat/completions";
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
         var requestBody = new
@@ -27,7 +27,7 @@ public class OpenAIResponse
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         // Send the request
-        var response = await client.PostAsync(requestUri, content);
+        var response = await client.PostAsync(OpenAIRequestURL, content);
         var responseString = await response.Content.ReadAsStringAsync();
 
         // Parse the response

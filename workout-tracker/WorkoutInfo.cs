@@ -6,20 +6,15 @@ using System.Linq;
 
 public class WorkoutInfo
 {
-    private Dictionary<string, List<DateTime>> muscleGroupHistory;
-
-    public WorkoutInfo()
+    private Dictionary<string, List<DateTime>> muscleGroupHistory = new()
     {
-        muscleGroupHistory = new Dictionary<string, List<DateTime>>
-        {
-            { "Chest", new List<DateTime>() },
-            { "Back", new List<DateTime>() },
-            { "Legs", new List<DateTime>() },
-            { "Arms", new List<DateTime>() },
-            { "Shoulders", new List<DateTime>() },
-            { "Abs", new List<DateTime>() }
-        };
-    }
+        { "Chest", new List<DateTime>() },
+        { "Back", new List<DateTime>() },
+        { "Legs", new List<DateTime>() },
+        { "Arms", new List<DateTime>() },
+        { "Shoulders", new List<DateTime>() },
+        { "Abs", new List<DateTime>() }
+    };
 
     public void LogWorkout(string muscleGroup, DateTime date)
     {
