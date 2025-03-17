@@ -21,11 +21,7 @@ public static class UserController
     
     static async Task<IResult> CreateUser([FromBody]UserDto userDto, [FromServices]IUserService userService)
     {
-        var user = new User
-        {
-            Id = Guid.NewGuid().ToString(),
-            Name = userDto.Name
-        };
+        var user = UserDto.ToUser(userDto);
 
         await userService.CreateUser(user);
         var userDTO = UserDto.ToUserDto(user);

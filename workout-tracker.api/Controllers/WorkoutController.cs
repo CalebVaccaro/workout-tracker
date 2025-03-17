@@ -25,14 +25,8 @@ public static class WorkoutController
     static async Task<IResult> CreateWorkout([FromBody]WorkoutDto workoutDto, [FromServices]IWorkoutService workoutService)
     {
         var muscleGroup = Enum.Parse<MuscleGroup>(workoutDto.MuscleGroup);
-        
-        var workout = new Workout
-        {
-            Id = Guid.NewGuid().ToString(),
-            UserId = workoutDto.UserId,
-            MuscleGroup = muscleGroup,
-            Date = workoutDto.Date
-        };
+
+        var workout = WorkoutDto.ToWorkout(workoutDto);
 
         await workoutService.CreateWorkout(workout);
         var workoutDTO = WorkoutDto.ToWorkoutDto(workout);

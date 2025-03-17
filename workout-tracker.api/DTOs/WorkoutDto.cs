@@ -17,4 +17,17 @@ public class WorkoutDto
             Date = workout.Date
         };
     }
+    
+    public static Workout ToWorkout(WorkoutDto workoutDto)
+    {
+        var muscleGroup = Enum.Parse<MuscleGroup>(workoutDto.MuscleGroup);
+        
+        return new Workout()
+        {
+            Id = workoutDto.Id,
+            UserId = workoutDto.UserId,
+            MuscleGroup = muscleGroup,
+            Date = workoutDto.Date
+        };
+    }
 }
