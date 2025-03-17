@@ -15,6 +15,10 @@ builder.Services.AddSingleton<WorkoutDb>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
 
+var openAIUrl = builder.Configuration["OpenAI:url"];
+var openAIKey = builder.Configuration["OpenAI:apiKey"];
+builder.Services.AddSingleton<IOpenAIService>(new OpenAIService(openAIUrl, openAIKey));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

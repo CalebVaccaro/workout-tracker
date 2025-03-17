@@ -12,6 +12,8 @@ public static class WorkoutController
         workout.MapPost("",CreateWorkout);
         workout.MapGet("/{id:guid}",GetWorkout);
         workout.MapGet("/user/{id:guid}",GetUserWorkouts);
+        workout.MapGet("/week/{id:guid}",GetUserWorkoutsThisWeek);
+        workout.MapGet("/suggestions/{id:guid}",GetWorkoutSuggestions);
     }
     
     static async Task<IResult> GetWorkout([FromRoute]string id, [FromServices]IWorkoutService workoutService)
@@ -41,6 +43,18 @@ public static class WorkoutController
     static async Task<IResult> GetUserWorkouts([FromRoute]string id, [FromServices]IWorkoutService workoutService)
     {
         var workouts = await workoutService.GetWorkouts(id);
+        return TypedResults.Ok(workouts);
+    }
+    
+    static async Task<IResult> GetUserWorkoutsThisWeek([FromRoute]string id, [FromServices]IWorkoutService workoutService)
+    {
+        var workouts = await workoutService.GetWorkoutsThisWeek(id);
+        return TypedResults.Ok(workouts);
+    }
+    
+    static async Task<IResult> GetWorkoutSuggestions([FromRoute]string id, [FromServices]IWorkoutService workoutService)
+    {
+        var workouts = await workoutService.GetWorkoutSuggestions(id);
         return TypedResults.Ok(workouts);
     }
 }

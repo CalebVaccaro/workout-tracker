@@ -9,9 +9,11 @@ public interface IWorkoutService
     Task<WorkoutDto> CreateWorkout(Workout workout);
     Task<string> DeleteWorkout(string id);
     Task<List<WorkoutDto>> GetWorkouts(string id);
+    Task<string> GetWorkoutsThisWeek(string id);
+    Task<string> GetWorkoutSuggestions(string id);
 }
 
-public class WorkoutService(WorkoutDb db) : IWorkoutService
+public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorkoutService
 {
     public async Task<WorkoutDto> GetWorkout(string id)
     {
@@ -35,5 +37,39 @@ public class WorkoutService(WorkoutDb db) : IWorkoutService
     {
         var workouts = db.GetWorkoutsAsync(id);
         return await Task.FromResult(workouts.Result.Select(WorkoutDto.ToWorkoutDto).ToList());
+    }
+    
+    public async Task<string> GetWorkoutsThisWeek(string id)
+    {
+        var workouts = await db.GetWorkoutsAsync(id);
+        var startOfWeek = DateTime.UtcNow.AddDays(-(int)DateTime.UtcNow.DayOfWeek);
+        var workoutsThisWeek = workouts.Where(w => w.Date >= startOfWeek).ToList();
+
+        var muscleGroupHistory = new Dictionary<MuscleGroup, List<DateTime>>();
+        foreach (var workout in workoutsThisWeek)
+        {
+            if (!muscleGroupHistory.ContainsKey(workout.MuscleGroup))
+            {
+                muscleGroupHistory[workout.MuscleGroup] = new List<DateTime>();
+            }
+            muscleGroupHistory[workout.MuscleGroup].Add(workout.Date);
+        }
+
+        var allMuscleGroups = Enum.GetValues(typeof(MuscleGroup)).Cast<MuscleGroup>();
+        var muscleGroupsNotWorkedThisWeek = allMuscleGroups
+            .Where(mg => !muscleGroupHistory.ContainsKey(mg) || muscleGroupHistory[mg].All(date => date < startOfWeek))
+            .ToList();
+
+        return string.Join(", ", muscleGroupsNotWorkedThisWeek);
+    }
+    
+    public async Task<string> GetWorkoutSuggestions(string id)
+    {
+        var prompt = "Tell me what workout routine I should do based on my workout history";
+        var muscleGroupHistory = await GetWorkoutsThisWeek(id);
+        var date = DateTime.Now;
+        var dateToPrompt = $"please only include workouts for the rest of the week as of {date:yyyy-MM-dd}";
+        var finalPrompt = $"{prompt}: {muscleGroupHistory}, {dateToPrompt}";
+        return await openAiService.GetOpenAIResponseAsync(finalPrompt);
     }
 }
