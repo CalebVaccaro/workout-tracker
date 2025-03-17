@@ -5,7 +5,7 @@ public class WorkoutDto
     public string Id { get; set; }
     public string UserId { get; set; }
     public string MuscleGroup { get; set; }
-    public DateTime Date { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.UtcNow;
 
     public static WorkoutDto ToWorkoutDto(Workout workout)
     {

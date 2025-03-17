@@ -56,16 +56,20 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         }
 
         var allMuscleGroups = Enum.GetValues(typeof(MuscleGroup)).Cast<MuscleGroup>();
+        var muscleGroupsWorkedThisWeek = muscleGroupHistory.Keys.ToList();
         var muscleGroupsNotWorkedThisWeek = allMuscleGroups
-            .Where(mg => !muscleGroupHistory.ContainsKey(mg) || muscleGroupHistory[mg].All(date => date < startOfWeek))
+            .Where(mg => !muscleGroupHistory.ContainsKey(mg))
             .ToList();
 
-        return string.Join(", ", muscleGroupsNotWorkedThisWeek);
+        var workedOutString = $"Muscle groups worked out this week: {string.Join(", ", muscleGroupsWorkedThisWeek)}";
+        var notWorkedOutString = $"Muscle groups not worked out this week: {string.Join(", ", muscleGroupsNotWorkedThisWeek)}";
+
+        return $"{workedOutString},{notWorkedOutString}";
     }
     
     public async Task<string> GetWorkoutSuggestions(string id)
     {
-        var prompt = "Tell me what workout routine I should do based on my workout history";
+        var prompt = "Tell me what workout routine I should do based on my workout history; muscle groups not worked this week";
         var muscleGroupHistory = await GetWorkoutsThisWeek(id);
         var date = DateTime.Now;
         var dateToPrompt = $"please only include workouts for the rest of the week as of {date:yyyy-MM-dd}";
