@@ -6,17 +6,17 @@ using System.Linq;
 
 public class WorkoutInfo
 {
-    private Dictionary<string, List<DateTime>> muscleGroupHistory = new()
+    private Dictionary<MuscleGroup, List<DateTime>> muscleGroupHistory = new()
     {
-        { "Chest", new List<DateTime>() },
-        { "Back", new List<DateTime>() },
-        { "Legs", new List<DateTime>() },
-        { "Arms", new List<DateTime>() },
-        { "Shoulders", new List<DateTime>() },
-        { "Abs", new List<DateTime>() }
+        { MuscleGroup.Chest, new List<DateTime>() },
+        { MuscleGroup.Legs, new List<DateTime>() },
+        { MuscleGroup.Arms, new List<DateTime>() },
+        { MuscleGroup.Back, new List<DateTime>() },
+        { MuscleGroup.Shoulders, new List<DateTime>() },
+        { MuscleGroup.Abs, new List<DateTime>() }
     };
 
-    public void LogWorkout(string muscleGroup, DateTime date)
+    public void LogWorkout(MuscleGroup muscleGroup, DateTime date)
     {
         if (muscleGroupHistory.ContainsKey(muscleGroup))
         {

@@ -505,3 +505,4 @@ ClientBin/
 .idea/
 .DS_Store
 appsettings.json
+appsettings.development.json

@@ -9,9 +9,9 @@ var dateToPrompt = $"please only include workouts for the rest of the week as of
             
 // Workout Information
 var workoutInfo = new WorkoutInfo();
-workoutInfo.LogWorkout("Chest", DateTime.Now.AddDays(-2));
-workoutInfo.LogWorkout("Back", DateTime.Now.AddDays(-1));
-workoutInfo.LogWorkout("Legs", DateTime.Now);
+workoutInfo.LogWorkout(MuscleGroup.Chest, DateTime.Now.AddDays(-2));
+workoutInfo.LogWorkout(MuscleGroup.Back, DateTime.Now.AddDays(-1));
+workoutInfo.LogWorkout(MuscleGroup.Legs, DateTime.Now);
             
 var muscleGroupsNotWorkedThisWeek = workoutInfo.GetMuscleGroupsNotWorkedThisWeek();
 Console.WriteLine($"Muscle groups not worked this week: {muscleGroupsNotWorkedThisWeek}");
