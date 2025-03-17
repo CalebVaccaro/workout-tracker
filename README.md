@@ -23,7 +23,7 @@ dotnet restore
 
 ## Configuration
 
-Add `appsettings.json` file to `.../workout-tracker/workout-tracker` folder
+Add `appsettings.json` file to `workout.tracker/workout.tracker.api` folder
 
 ## Running the Project
 

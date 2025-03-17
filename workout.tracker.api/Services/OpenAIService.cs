@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace workout_tracker.api.Services;
 
@@ -42,7 +42,7 @@ public class OpenAIService : IOpenAIService
             }
         };
 
-        var jsonContent = JsonConvert.SerializeObject(requestBody);
+        var jsonContent = JsonSerializer.Serialize(requestBody);
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
         // Send the request
@@ -50,7 +50,7 @@ public class OpenAIService : IOpenAIService
         var responseString = await response.Content.ReadAsStringAsync();
 
         // Parse the response
-        dynamic jsonResponse = JsonConvert.DeserializeObject(responseString);
+        dynamic jsonResponse = JsonSerializer.Deserialize<dynamic>(responseString);
         string message = jsonResponse.choices[0].message.content;
 
         return message;
