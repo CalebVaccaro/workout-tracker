@@ -37,7 +37,7 @@ public class OpenAIService : IOpenAIService
             model = "gpt-4", // Specify the model you want to use
             messages = new[]
             {
-                new { role = "system", content = "You are a helpful assistant." },
+                new { role = "system", content = systemMessage },
                 new { role = "user", content = prompt }
             }
         };

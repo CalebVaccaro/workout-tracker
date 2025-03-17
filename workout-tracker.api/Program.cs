@@ -2,6 +2,16 @@ using workout_tracker.api.Controllers;
 using workout_tracker.api.Databases;
 using workout_tracker.api.Services;
 
+var runType = args.Length > 0 ? args[0] : "";
+
+if (runType == "createdb"){
+    // create workout.db file not exists in current directory
+    if (!File.Exists("workout.db")){
+        File.Create("workout.db");
+    }
+    return;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
