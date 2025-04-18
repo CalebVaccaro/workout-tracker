@@ -2,14 +2,12 @@
 
 public class UserDto
 {
-    public string Id { get; set; }
-    public string? Name { get; set; } = default;
+    public string Name { get; set; }
 
     public static User ToUser(UserDto userDto)
     {
         return new User()
         {
-            Id = userDto.Id,
             Name = userDto.Name
         };
     }
@@ -18,7 +16,6 @@ public class UserDto
     {
         return new UserDto()
         {
-            Id = user.Id,
             Name = user.Name
         };
     }

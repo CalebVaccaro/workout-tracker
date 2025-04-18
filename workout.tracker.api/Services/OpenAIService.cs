@@ -1,11 +1,13 @@
 ﻿using System.Text;
 using System.Text.Json;
+using OpenAI.Chat;
 
 namespace workout_tracker.api.Services;
 
 public interface IOpenAIService
 {
     Task<string> GetOpenAIResponseAsync(string prompt);   
+    Task<string> ChatCompletion(string prompt);   
 }
 
 public class OpenAIService : IOpenAIService
@@ -54,5 +56,14 @@ public class OpenAIService : IOpenAIService
         string message = jsonResponse.choices[0].message.content;
 
         return message;
+    }
+
+    public async Task<string> ChatCompletion(string prompt)
+    {
+        ChatClient client = new(model: "gpt-4o", apiKey: apiKey);
+
+        ChatCompletion completion = await client.CompleteChatAsync(prompt);
+
+        return completion.Content[0].Text;
     }
 }

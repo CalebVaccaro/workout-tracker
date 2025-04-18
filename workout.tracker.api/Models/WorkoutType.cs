@@ -3,6 +3,6 @@
 public enum WorkoutType
 {
     Dumbbells,
-    BodyWeight,
+    Body,
     HeavyEquipment
 }

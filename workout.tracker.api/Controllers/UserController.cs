@@ -8,9 +8,16 @@ public static class UserController
 {
     public static void RegisterUserEndpoints(this WebApplication app)
     {
-        var user = app.MapGroup("/user");
-        user.MapPost("",CreateUser);
+        var user = app.MapGroup("/users");
+        user.MapGet("", GetUsers);
         user.MapGet("/{id:guid}", GetUser);
+        user.MapPost("", CreateUser);
+    }
+    
+    static async Task<IResult> GetUsers([FromServices]IUserService userService)
+    {
+        var user = await userService.GetUsers();
+        return TypedResults.Ok(user);
     }
     
     static async Task<IResult> GetUser([FromRoute]string id, [FromServices]IUserService userService)

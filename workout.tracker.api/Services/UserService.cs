@@ -5,7 +5,8 @@ namespace workout_tracker.api.Services;
 
 public interface IUserService
 {
-    Task<UserDto> GetUser(string id);
+    Task<List<User>> GetUsers();
+    Task<User> GetUser(string id);
     Task<UserDto> CreateUser(User user);
     Task<UserDto> UpdateUser(User user);
     Task<string> DeleteUser(string id);
@@ -13,14 +14,27 @@ public interface IUserService
 
 public class UserService(UserDb db) : IUserService
 {
-    public async Task<UserDto> GetUser(string id)
+    public async Task<List<User>> GetUsers()
+    {
+        var users = db.GetUsersAsync();
+        
+        if (users.Result == null || users.Result.Count == 0)
+        {
+            return new List<User>();
+        }
+        
+        return await Task.FromResult(users.Result.ToList());
+    }
+    
+    public async Task<User> GetUser(string id)
     {
         var user = db.GetUserAsync(id);
-        return await Task.FromResult(UserDto.ToUserDto(user.Result));
+        return await Task.FromResult(user.Result);
     }
     
     public async Task<UserDto> CreateUser(User user)
     {
+        user.Id = Guid.NewGuid().ToString();
         await db.CreateUserAsync(user);
         return await Task.FromResult(UserDto.ToUserDto(user));
     }

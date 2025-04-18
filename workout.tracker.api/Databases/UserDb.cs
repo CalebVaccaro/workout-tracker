@@ -13,6 +13,14 @@ public class UserDb
         connection.Execute("CREATE TABLE IF NOT EXISTS Users (Id TEXT PRIMARY KEY, Name TEXT)");
     }
     
+    public async Task<List<User>> GetUsersAsync()
+    {
+        using var connection = new SQLiteConnection(_connectionString);
+        await connection.OpenAsync();
+        var users = await connection.QueryAsync<User>("SELECT * FROM Users");
+        return users.ToList();
+    }
+    
     public async Task<User> GetUserAsync(string id)
     {
         using var connection = new SQLiteConnection(_connectionString);

@@ -14,7 +14,14 @@ public class WorkoutDb
             CREATE TABLE IF NOT EXISTS Workouts (
                 Id TEXT PRIMARY KEY, 
                 UserId TEXT, 
+                Name TEXT, 
                 MuscleGroup TEXT, 
+                WorkoutType TEXT, 
+                Sets INT,
+                Reps INT,
+                Duration INT,
+                CaloriesBurned INT,
+                Completed BOOL,
                 Date TEXT
             )");
     }
@@ -31,7 +38,8 @@ public class WorkoutDb
     {
         using var connection = new SQLiteConnection(_connectionString);
         await connection.OpenAsync();
-        await connection.ExecuteAsync("INSERT INTO Workouts (Id, UserId, MuscleGroup, Date) VALUES (@Id, @UserId, @MuscleGroup, @Date)", workout);
+        await connection.ExecuteAsync($@"INSERT INTO Workouts (Id, UserId, Name, MuscleGroup, WorkoutType, Sets, Reps, Duration, CaloriesBurned, Completed, Date)
+            VALUES (@Id, @UserId, @Name, @MuscleGroup, @WorkoutType, @Sets, @Reps, @Duration, @CaloriesBurned, @Completed, @Date)", workout);
     }
     
     public async Task DeleteWorkoutAsync(string id)
