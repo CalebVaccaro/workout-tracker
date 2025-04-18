@@ -5,6 +5,7 @@ public static class PromptBuilder
     public static string BuildWorkoutSuggestionPrompt(
         string userWorkoutHistory,
         DateTime referenceDate,
+        string workoutType = null,
         int suggestionsCount = 5,
         string duration = "1 hour")
     {
@@ -19,6 +20,8 @@ public static class PromptBuilder
 
         var suggestionsPrompt = $"Number of suggestions: {suggestionsCount}.";
         var durationPrompt = $"Duration: {duration}.";
+        
+        var specificWorkoutType = $"workoutType: {workoutType}, if provided only exercises of that type should be included.";
 
         var jsonOutputPrompt = 
             "Return only valid JSON. Do NOT include ```json or any code block formatting. " +
@@ -39,6 +42,6 @@ public static class PromptBuilder
             "  }\n" +
             "]";
 
-        return $"{basePrompt}: {userWorkoutHistory}, {datePrompt} {constraintsPrompt} {suggestionsPrompt} {durationPrompt} {jsonOutputPrompt}";
+        return $"{basePrompt}: {userWorkoutHistory}, {datePrompt} {constraintsPrompt} {suggestionsPrompt} {durationPrompt}, {specificWorkoutType}, {jsonOutputPrompt}";
     }
 }

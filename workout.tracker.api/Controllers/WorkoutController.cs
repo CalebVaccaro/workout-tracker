@@ -45,9 +45,9 @@ public static class WorkoutController
         return TypedResults.Ok(workouts);
     }
     
-    static async Task<IResult> GetUserWeekSuggestions([FromRoute]string userId, [FromRoute]int suggestionsCount, [FromServices]IWorkoutService workoutService)
+    static async Task<IResult> GetUserWeekSuggestions([FromRoute]string userId, [FromRoute]int suggestionsCount, [FromRoute]string workoutType, [FromServices]IWorkoutService workoutService)
     {
-        var workouts = await workoutService.GetUserWeekSuggestions(userId, suggestionsCount);
+        var workouts = await workoutService.GetUserWeekSuggestions(userId, suggestionsCount, workoutType);
         return TypedResults.Ok(workouts);
     }
     
