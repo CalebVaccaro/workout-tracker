@@ -38,8 +38,8 @@ public class WorkoutDb
     {
         using var connection = new SQLiteConnection(_connectionString);
         await connection.OpenAsync();
-        await connection.ExecuteAsync($@"INSERT INTO Workouts (Id, UserId, Name, MuscleGroup, WorkoutType, Sets, Reps, Duration, CaloriesBurned, Completed, Date)
-            VALUES (@Id, @UserId, @Name, @MuscleGroup, @WorkoutType, @Sets, @Reps, @Duration, @CaloriesBurned, @Completed, @Date)", workout);
+        await connection.ExecuteAsync($@"INSERT INTO Workouts (Id, UserId, Name, MuscleGroup, WorkoutType, Sets, Reps, Duration, CaloriesBurned, Date)
+            VALUES (@Id, @UserId, @Name, @MuscleGroup, @WorkoutType, @Sets, @Reps, @Duration, @CaloriesBurned, @Date)", workout);
     }
     
     public async Task DeleteWorkoutAsync(string id)
@@ -53,7 +53,7 @@ public class WorkoutDb
     {
         using var connection = new SQLiteConnection(_connectionString);
         await connection.OpenAsync();
-        var workouts = await connection.QueryAsync<Workout>("SELECT * FROM Workouts WHERE UserId = @WserId", new { UserId = userId });
+        var workouts = await connection.QueryAsync<Workout>("SELECT * FROM Workouts WHERE UserId = @UserId", new { UserId = userId });
         return workouts;
     }
 }

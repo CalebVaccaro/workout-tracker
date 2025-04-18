@@ -9,7 +9,7 @@ public class WorkoutDto
     public string Name { get; set; }
     public int Sets { get; set; }
     public int Reps { get; set; }
-    public int Duration { get; set; }
+    public string Duration { get; set; }
     public int CaloriesBurned { get; set; }
     public bool Completed { get; set; } = false;
     public DateTime Date { get; set; } = DateTime.UtcNow;
@@ -28,7 +28,6 @@ public class WorkoutDto
             Reps = workout.Reps,
             Duration = workout.Duration,
             CaloriesBurned = workout.CaloriesBurned,
-            Completed = workout.Completed
         };
     }
     
@@ -49,7 +48,6 @@ public class WorkoutDto
             Reps = workoutDto.Reps,
             Duration = workoutDto.Duration,
             CaloriesBurned = workoutDto.CaloriesBurned,
-            Completed = workoutDto.Completed
         };
     }
 }
