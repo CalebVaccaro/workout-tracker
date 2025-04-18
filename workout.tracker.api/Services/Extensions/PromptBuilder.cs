@@ -23,11 +23,21 @@ public static class PromptBuilder
         var jsonOutputPrompt = 
             "Return only valid JSON. Do NOT include ```json or any code block formatting. " +
             "Just return the raw JSON array. Do not include any explanations.\n\n" +
-            "[\n  {\n    \"title\": \"Dumbbell Bench Press\",\n    \"description\": \"Lie on a bench and press dumbbells upward to strengthen your chest.\",\n" +
-            "    \"imageUrl\": \"https://example.com/images/benchpress.png\",\n    \"videoUrl\": \"https://example.com/videos/benchpress.mp4\",\n" +
-            "    \"equipment\": \"Dumbbells, Bench\",\n    \"sets\": \"3\",\n    \"reps\": \"12\",\n  \"duration(if exercise requires it, always in seconds)\": \"0\",\n    \"caloriesBurned\": \"120\",\n" +
+            "[\n" +
+            "  {\n" +
+            "    \"title\": \"Dumbbell Bench Press\",\n" +
+            "    \"description\": \"Lie on a bench and press dumbbells upward to strengthen your chest.\",\n" +
+            "    \"imageUrl\": \"https://example.com/images/benchpress.png\",\n" +
+            "    \"videoUrl\": \"https://example.com/videos/benchpress.mp4\",\n" +
+            "    \"equipment\": \"Dumbbells, Bench\",\n" +
+            "    \"sets\": \"3\",\n" +
+            "    \"reps\": \"12\",\n" +
+            "    \"duration\": \"0\",\n" +
+            "    \"caloriesBurned\": \"120\",\n" +
             $"    \"workoutType\": \"(Choose only one of WorkoutType) {workoutTypes}\",\n" +
-            $"    \"muscleGroup\": \"(Choose only one MuscleGroup) {muscleGroups}\"\n  }},\n  ...\n]";
+            $"    \"muscleGroup\": \"(Choose only one MuscleGroup) {muscleGroups}\"\n" +
+            "  }\n" +
+            "]";
 
         return $"{basePrompt}: {userWorkoutHistory}, {datePrompt} {constraintsPrompt} {suggestionsPrompt} {durationPrompt} {jsonOutputPrompt}";
     }
