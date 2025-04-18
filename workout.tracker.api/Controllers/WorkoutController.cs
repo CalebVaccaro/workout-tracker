@@ -11,10 +11,10 @@ public static class WorkoutController
         var workout = app.MapGroup("/workouts");
         workout.MapPost("",CreateWorkout);
         workout.MapGet("/{id:guid}",GetWorkout);
-        workout.MapGet("/user/{id:guid}",GetUserWorkouts);
-        workout.MapGet("/week/{id:guid}",GetUserWorkoutsThisWeek);
-        workout.MapGet("/suggestions/{id:guid}",GetUserWeekSuggestions);
-        workout.MapPost("/user/{id:guid}",CreateWorkouts);
+        workout.MapGet("/user/{userId:guid}",GetUserWorkouts);
+        workout.MapGet("/week/{userId:guid}",GetUserWorkoutsThisWeek);
+        workout.MapGet("/suggestions/{userId:guid}",GetUserWeekSuggestions);
+        workout.MapPost("/user/{userId:guid}",CreateWorkouts);
     }
     
     static async Task<IResult> GetWorkout([FromRoute]string id, [FromServices]IWorkoutService workoutService)
@@ -25,8 +25,6 @@ public static class WorkoutController
     
     static async Task<IResult> CreateWorkout([FromBody]WorkoutDto workoutDto, [FromServices]IWorkoutService workoutService)
     {
-        var muscleGroup = Enum.Parse<MuscleGroup>(workoutDto.MuscleGroup);
-
         var workout = WorkoutDto.ToWorkout(workoutDto);
 
         await workoutService.CreateWorkout(workout);
@@ -35,27 +33,27 @@ public static class WorkoutController
         return TypedResults.Ok(workoutDTO);
     }
     
-    static async Task<IResult> GetUserWorkouts([FromRoute]string id, [FromServices]IWorkoutService workoutService)
+    static async Task<IResult> GetUserWorkouts([FromRoute]string userId, [FromServices]IWorkoutService workoutService)
     {
-        var workouts = await workoutService.GetUserWorkouts(id);
+        var workouts = await workoutService.GetUserWorkouts(userId);
         return TypedResults.Ok(workouts);
     }
     
-    static async Task<IResult> GetUserWorkoutsThisWeek([FromRoute]string id, [FromServices]IWorkoutService workoutService)
+    static async Task<IResult> GetUserWorkoutsThisWeek([FromRoute]string userId, [FromServices]IWorkoutService workoutService)
     {
-        var workouts = await workoutService.GetUserWorkoutsThisWeek(id);
+        var workouts = await workoutService.GetUserWorkoutsThisWeek(userId);
         return TypedResults.Ok(workouts);
     }
     
-    static async Task<IResult> GetUserWeekSuggestions([FromRoute]string id, [FromServices]IWorkoutService workoutService)
+    static async Task<IResult> GetUserWeekSuggestions([FromRoute]string userId, [FromServices]IWorkoutService workoutService)
     {
-        var workouts = await workoutService.GetUserWeekSuggestions(id);
+        var workouts = await workoutService.GetUserWeekSuggestions(userId);
         return TypedResults.Ok(workouts);
     }
     
-    static async Task<IResult> CreateWorkouts([FromRoute]string id, [FromBody]List<WorkoutDto> suggestions, [FromServices]IWorkoutService workoutService)
+    static async Task<IResult> CreateWorkouts([FromRoute]string userId, [FromBody]List<WorkoutDto> workoutDtos, [FromServices]IWorkoutService workoutService)
     {
-        var workouts = await workoutService.SaveWorkout(id, suggestions);
+        var workouts = await workoutService.SaveWorkouts(userId, workoutDtos);
         return TypedResults.Ok(workouts);
     }
 }

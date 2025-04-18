@@ -49,11 +49,11 @@ public class WorkoutDb
         await connection.ExecuteAsync("DELETE FROM Workouts WHERE Id = @Id", new { Id = id });
     }
 
-    public async Task<IEnumerable<Workout>> GetWorkoutsAsync(string id)
+    public async Task<IEnumerable<Workout>> GetWorkoutsAsync(string userId)
     {
         using var connection = new SQLiteConnection(_connectionString);
         await connection.OpenAsync();
-        var workouts = await connection.QueryAsync<Workout>("SELECT * FROM Workouts WHERE UserId = @Id", new { Id = id });
+        var workouts = await connection.QueryAsync<Workout>("SELECT * FROM Workouts WHERE UserId = @WserId", new { UserId = userId });
         return workouts;
     }
 }

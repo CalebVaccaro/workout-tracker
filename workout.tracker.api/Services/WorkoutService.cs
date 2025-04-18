@@ -11,10 +11,10 @@ public interface IWorkoutService
     Task<WorkoutDto> GetWorkout(string id);
     Task<WorkoutDto> CreateWorkout(Workout workout);
     Task<string> DeleteWorkout(string id);
-    Task<List<WorkoutDto>> GetUserWorkouts(string id);
-    Task<string> GetUserWorkoutsThisWeek(string id);
+    Task<List<WorkoutDto>> GetUserWorkouts(string userId);
+    Task<string> GetUserWorkoutsThisWeek(string userId);
     Task<List<WorkoutDto>> GetUserWeekSuggestions(string id);
-    Task<List<WorkoutDto>> SaveWorkout(string id, List<WorkoutDto> suggestions);
+    Task<List<WorkoutDto>> SaveWorkouts(string id, List<WorkoutDto> suggestions);
 }
 
 public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorkoutService
@@ -27,6 +27,7 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
 
     public async Task<WorkoutDto> CreateWorkout(Workout workout)
     {
+        workout.Id = Guid.NewGuid().ToString();
         await db.CreateWorkoutAsync(workout);
         return await Task.FromResult(WorkoutDto.ToWorkoutDto(workout));
     }
@@ -37,15 +38,15 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         return await Task.FromResult(id);
     }
     
-    public async Task<List<WorkoutDto>> GetUserWorkouts(string id)
+    public async Task<List<WorkoutDto>> GetUserWorkouts(string userId)
     {
-        var workouts = db.GetWorkoutsAsync(id);
+        var workouts = db.GetWorkoutsAsync(userId);
         return await Task.FromResult(workouts.Result.Select(WorkoutDto.ToWorkoutDto).ToList());
     }
     
-    public async Task<string> GetUserWorkoutsThisWeek(string id)
+    public async Task<string> GetUserWorkoutsThisWeek(string userId)
     {
-        var workouts = await db.GetWorkoutsAsync(id);
+        var workouts = await db.GetWorkoutsAsync(userId);
         var startOfWeek = DateTime.UtcNow.AddDays(-(int)DateTime.UtcNow.DayOfWeek);
         var workoutsThisWeek = workouts.Where(w => w.Date >= startOfWeek).ToList();
 
@@ -71,9 +72,9 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         return $"{workedOutString} / {notWorkedOutString}";
     }
     
-    public async Task<List<WorkoutDto>> GetUserWeekSuggestions(string id)
+    public async Task<List<WorkoutDto>> GetUserWeekSuggestions(string userId)
     {
-        var muscleGroupHistory = await GetUserWorkoutsThisWeek(id);
+        var muscleGroupHistory = await GetUserWorkoutsThisWeek(userId);
         var finalPrompt = PromptBuilder.BuildWorkoutSuggestionPrompt(
             userWorkoutHistory: muscleGroupHistory,
             referenceDate: DateTime.Now,
@@ -87,7 +88,7 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         return workoutDtos?.ToList() ?? new List<WorkoutDto>();
     }
 
-    public async Task<List<WorkoutDto>> SaveWorkout(string userId, List<WorkoutDto> workoutDtos)
+    public async Task<List<WorkoutDto>> SaveWorkouts(string userId, List<WorkoutDto> workoutDtos)
     {
         var workouts = new List<WorkoutDto>();
         var workoutsToSave = workoutDtos.Where(e => e.Completed)
