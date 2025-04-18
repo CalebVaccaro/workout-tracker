@@ -13,7 +13,7 @@ public interface IWorkoutService
     Task<string> DeleteWorkout(string id);
     Task<List<WorkoutDto>> GetUserWorkouts(string userId);
     Task<string> GetUserWorkoutsThisWeek(string userId);
-    Task<List<WorkoutDto>> GetUserWeekSuggestions(string id, int suggestionsCount, string workoutType);
+    Task<List<WorkoutDto>> GetUserWeekSuggestions(string id, int suggestionsCount, int workoutType);
     Task<List<WorkoutDto>> SaveWorkouts(string id, List<WorkoutDto> suggestions);
 }
 
@@ -72,7 +72,7 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         return $"{workedOutString} / {notWorkedOutString}";
     }
     
-    public async Task<List<WorkoutDto>> GetUserWeekSuggestions(string userId, int suggestionsCount, string workoutType)
+    public async Task<List<WorkoutDto>> GetUserWeekSuggestions(string userId, int suggestionsCount, int workoutType)
     {
         var muscleGroupHistory = await GetUserWorkoutsThisWeek(userId);
         var finalPrompt = PromptBuilder.BuildWorkoutSuggestionPrompt(

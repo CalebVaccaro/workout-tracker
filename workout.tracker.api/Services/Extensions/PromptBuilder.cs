@@ -5,7 +5,7 @@ public static class PromptBuilder
     public static string BuildWorkoutSuggestionPrompt(
         string userWorkoutHistory,
         DateTime referenceDate,
-        string workoutType = null,
+        int workoutType,
         int suggestionsCount = 5,
         string duration = "1 hour")
     {
@@ -21,7 +21,12 @@ public static class PromptBuilder
         var suggestionsPrompt = $"Number of suggestions: {suggestionsCount}.";
         var durationPrompt = $"Duration: {duration}.";
         
-        var specificWorkoutType = $"workoutType: {workoutType}, if provided only exercises of that type should be included.";
+        var specificWorkoutType = string.Empty;
+        var parseWorkoutType = Enum.TryParse<WorkoutType>(workoutType.ToString(), out var workoutTypeEnum);
+        if (parseWorkoutType)
+        {
+            specificWorkoutType = $"workoutType: {workoutTypeEnum}, if provided only exercises of that type should be included.";
+        }
 
         var jsonOutputPrompt = 
             "Return only valid JSON. Do NOT include ```json or any code block formatting. " +
