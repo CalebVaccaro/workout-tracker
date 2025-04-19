@@ -13,7 +13,7 @@ public static class WorkoutController
         workout.MapGet("/{id:guid}",GetWorkout);
         workout.MapGet("/user/{userId:guid}",GetUserWorkouts);
         workout.MapGet("/week/{userId:guid}",GetUserWorkoutsThisWeek);
-        workout.MapGet("/suggestions/{userId:guid}/{suggestionsCount}",GetUserWeekSuggestions);
+        workout.MapGet("/suggestions/{userId:guid}/{suggestionsCount}/{workoutType}",GetUserWeekSuggestions);
         workout.MapPost("/user/{userId:guid}",CreateWorkouts);
     }
     
