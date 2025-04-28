@@ -28,8 +28,8 @@ public static class PromptBuilder
             specificWorkoutType = $"workoutType: {workoutTypeEnum}, if provided only exercises of that type should be included.";
         }
 
-        var jsonOutputPrompt = 
-            "Return only valid JSON. Do NOT include ```json or any code block formatting. " +
+        var jsonOutputPrompt =
+            "Return only valid JSON. Do NOT include ```json or any code block formatting. Do not veer from the schema" +
             "Just return the raw JSON array. Do not include any explanations.\n\n" +
             "[\n" +
             "  {\n" +
@@ -38,12 +38,12 @@ public static class PromptBuilder
             "    \"imageUrl\": \"https://example.com/images/benchpress.png\",\n" +
             "    \"videoUrl\": \"https://example.com/videos/benchpress.mp4\",\n" +
             "    \"equipment\": \"Dumbbells, Bench\",\n" +
-            "    \"sets\": \"3\",\n" +
-            "    \"reps\": \"12\",\n" +
+            "    \"sets\": 3,\n" + // Ensure this is an integer
+            "    \"reps\": 12,\n" + // Ensure this is an integer
             "    \"duration\": \"0\",\n" +
-            "    \"caloriesBurned\": \"120\",\n" +
-            $"    \"workoutType\": \"(Choose only one of WorkoutType) {workoutTypes}\",\n" +
-            $"    \"muscleGroup\": \"(Choose only one MuscleGroup) {muscleGroups}\"\n" +
+            "    \"caloriesBurned\": \"120\",\n" + // Ensure this is an integer
+            $"    \"workoutType\": \"{workoutTypes}\",\n" + //(Choose only one of WorkoutType)
+            $"    \"muscleGroup\": \"{muscleGroups}\"\n" + //(Choose only one of MuscleGroup)
             "  }\n" +
             "]";
 

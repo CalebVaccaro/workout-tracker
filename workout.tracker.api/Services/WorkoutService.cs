@@ -85,13 +85,20 @@ public class WorkoutService(WorkoutDb db, IOpenAIService openAiService) : IWorko
         
         var chatResponse = await openAiService.ChatCompletion(finalPrompt);
         var workoutSuggestions = JsonConvert.DeserializeObject<List<WorkoutSuggestion>>(chatResponse);
-        var workoutDtos = workoutSuggestions?.Select(WorkoutSuggestion.ToWorkout);
+        var workoutsWithoutId = workoutSuggestions?.Select(e =>
+        {
+            e.Id = Guid.NewGuid().ToString();
+            e.UserId = userId;
+            return e;
+        });
+        var workoutDtos = workoutsWithoutId?.Select(WorkoutSuggestion.ToWorkout);
         return workoutDtos?.ToList() ?? new List<WorkoutDto>();
     }
 
     public async Task<List<WorkoutDto>> SaveWorkouts(string userId, List<WorkoutDto> workoutDtos)
     {
         var workouts = new List<WorkoutDto>();
+        workoutDtos.ForEach(e => e.Completed = true);
         var workoutsToSave = workoutDtos.Where(e => e.Completed)
             .Select(WorkoutDto.ToWorkout).ToList();
         foreach (var workout in workoutsToSave)
